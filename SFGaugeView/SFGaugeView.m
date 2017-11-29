@@ -428,4 +428,8 @@ static const CGFloat CUTOFF = 0;
     return self.maxlevel - self.minlevel;
 }
 
+- (BOOL)hideLevel {
+    return true;
+}
+
 @end
