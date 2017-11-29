@@ -21,7 +21,7 @@
 
 @synthesize minlevel = _minlevel;
 
-static const CGFloat CUTOFF = 0.5;
+static const CGFloat CUTOFF = 0;
 
 #pragma mark init stuff
 
@@ -100,7 +100,7 @@ static const CGFloat CUTOFF = 0.5;
     if (!self.hideLevel) {
         fontSize = [self needleRadius] + 5;
         font = [UIFont fontWithName:@"Arial" size:fontSize];
-        textColor = [self bgColor];
+        textColor = [self progressColor];
         
         stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
         NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self currentLevel]] attributes:stringAttrs];
@@ -129,7 +129,7 @@ static const CGFloat CUTOFF = 0.5;
     UIBezierPath *bgPath2 = [UIBezierPath bezierPath];
     [bgPath2 moveToPoint:[self center]];
     [bgPath2 addArcWithCenter:[self center] radius:self.bgRadius startAngle:(3 * M_PI_2) + self.currentRadian endAngle:endtime clockwise:YES];
-    [[self lighterColorForColor:[self bgColor]] set];
+    [[self progressColor] set];
     [bgPath2 fill];
     
     UIBezierPath *bgPathInner = [UIBezierPath bezierPath];
@@ -368,7 +368,7 @@ static const CGFloat CUTOFF = 0.5;
 - (UIColor *) needleColor
 {
     if (!_needleColor) {
-        _needleColor = [UIColor colorWithRed:76/255.0 green:177/255.0 blue:88/255.0 alpha:1];
+        _needleColor = [UIColor colorWithRed:77/255.0 green:77/255.0 blue:77/255.0 alpha:1];
     }
     
     return _needleColor;
@@ -377,10 +377,19 @@ static const CGFloat CUTOFF = 0.5;
 - (UIColor *) bgColor
 {
     if (!_bgColor) {
-        _bgColor = [UIColor colorWithRed:211/255.0 green:211/255.0 blue:211/255.0 alpha:1];
+        _bgColor = [UIColor colorWithRed:58/255.0 green:133/255.0 blue:154/255.0 alpha:1];
     }
     
     return _bgColor;
+}
+
+- (UIColor *)progressColor
+{
+    if (!_progressColor) {
+        _progressColor = [UIColor colorWithRed:204/255.0 green:204/255.0 blue:204/255.0 alpha:1];
+    }
+    
+    return _progressColor;
 }
 
 - (CGFloat) needleRadius

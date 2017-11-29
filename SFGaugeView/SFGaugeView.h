@@ -22,6 +22,7 @@
 @property (nonatomic) NSUInteger minlevel;
 @property (nonatomic) UIColor *needleColor;
 @property (nonatomic) UIColor *bgColor;
+@property (nonatomic) UIColor *progressColor;
 @property (nonatomic) BOOL hideLevel;
 @property (nonatomic) NSString *minImage;
 @property (nonatomic) NSString *maxImage;
