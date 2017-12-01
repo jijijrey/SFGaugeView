@@ -39,7 +39,7 @@
 //    [self.view addSubview:view];
     
     self.topTachometer.maxlevel = 10;
-    self.topTachometer.minlevel = 1;
+    self.topTachometer.minlevel = 0;
     self.topTachometer.currentLevel = 8;
     self.topTachometer.hideLevel = YES;
 
