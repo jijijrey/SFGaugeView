@@ -24,6 +24,7 @@
 @property (nonatomic) UIColor *bgColor;
 @property (nonatomic) UIColor *progressColor;
 @property (nonatomic) BOOL hideLevel;
+@property (nonatomic) BOOL hideMinMax;
 @property (nonatomic) NSString *minImage;
 @property (nonatomic) NSString *maxImage;
 @property (nonatomic) BOOL autoAdjustImageColors;

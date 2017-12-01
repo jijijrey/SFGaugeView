@@ -64,6 +64,7 @@ static const CGFloat CUTOFF = 0;
     [self drawNeedle];
     [self drawLabels];
     [self drawImageLabels];
+    [self drawLevels];
 }
 
 - (void) drawImageLabels
@@ -85,6 +86,30 @@ static const CGFloat CUTOFF = 0;
         
         [badImg drawInRect:CGRectMake([self centerX] - self.bgRadius, [self centerY] - badImg.size.height * scaleFactor, badImg.size.width * scaleFactor, badImg.size.height * scaleFactor)];
         [goodImg drawInRect:CGRectMake([self centerX] + self.bgRadius - (goodImg.size.width * scaleFactor), [self centerY] - goodImg.size.height * scaleFactor, goodImg.size.width * scaleFactor, goodImg.size.height * scaleFactor)];
+    }
+}
+
+- (void) drawLevels
+{
+    if (self.minlevel && self.maxlevel)
+    {
+        CGFloat fontSize = self.bounds.size.width/18;
+        UIFont* font = [UIFont fontWithName:@"Arial" size:fontSize];
+        UIColor* textColor = [self needleColor];
+        
+        
+        NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
+        
+        if (!self.hideMinMax) {
+            fontSize = [self needleRadius] + 5;
+            font = [UIFont fontWithName:@"Arial" size:fontSize];
+            
+            stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
+            NSAttributedString* minlevelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self minlevel]] attributes:stringAttrs];
+            
+            CGPoint levelStrPoint = CGPointMake([self centerX] - self.bgRadius + minlevelStr.size.width, [self center].y + minlevelStr.size.height/2);
+            [minlevelStr drawAtPoint:levelStrPoint];
+        }
     }
 }
 
@@ -408,6 +433,11 @@ static const CGFloat CUTOFF = 0;
     }
     
     return _maxlevel;
+}
+
+- (BOOL)hideMinMax
+{
+    return false;
 }
 
 - (void)setMinlevel:(NSUInteger)minlevel
