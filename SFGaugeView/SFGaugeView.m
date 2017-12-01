@@ -107,7 +107,7 @@ static const CGFloat CUTOFF = 0;
             stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
             NSAttributedString* minlevelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self minlevel]] attributes:stringAttrs];
             
-            CGPoint levelStrPoint = CGPointMake([self centerX] - self.bgRadius + minlevelStr.size.width, [self center].y + minlevelStr.size.height/2);
+            CGPoint levelStrPoint = CGPointMake([self centerX] - self.bgRadius + minlevelStr.size.width, [self center].y + 5);
             [minlevelStr drawAtPoint:levelStrPoint];
         }
     }
