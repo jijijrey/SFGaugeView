@@ -15,6 +15,7 @@
 @property(nonatomic) CGFloat currentRadian;
 @property(nonatomic) CGFloat passingRadian;
 @property(nonatomic) NSInteger oldLevel;
+@property(nonatomic) NSInteger oldPassing;
 @property(nonatomic, readonly) NSUInteger scale;
 @end
 
@@ -49,7 +50,7 @@ static const CGFloat CUTOFF = 0;
     self.contentMode = UIViewContentModeRedraw;
     
     self.currentRadian = 0;
-    self.passingLevel = 0;
+    self.passingRadian = 0;
     [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)]];
 }
 
@@ -63,10 +64,10 @@ static const CGFloat CUTOFF = 0;
 - (void)drawRect:(CGRect)rect
 {
     [self drawBg];
-    [self drawLabels];
-    [self drawImageLabels];
     [self drawLevels];
     [self drawNeedle];
+    [self drawLabels];
+    [self drawImageLabels];
 }
 
 - (void) drawImageLabels
@@ -125,7 +126,7 @@ static const CGFloat CUTOFF = 0;
 {
     CGFloat fontSize = self.bounds.size.width/18;
     UIFont* font = [UIFont fontWithName:@"Arial" size:fontSize];
-    UIColor* textColor = [self needleColor];
+    UIColor* textColor = [UIColor whiteColor];
     
     
     NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
@@ -133,8 +134,9 @@ static const CGFloat CUTOFF = 0;
     if (!self.hideLevel) {
         fontSize = [self needleRadius] + 5;
         font = [UIFont fontWithName:@"Arial" size:fontSize];
-        textColor = [self progressColor];
+        textColor = [UIColor whiteColor];
         
+        NSLog(@"Current Label: %ld", (long)[self currentLevel]);
         stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
         NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self currentLevel]] attributes:stringAttrs];
         
@@ -235,6 +237,17 @@ static const CGFloat CUTOFF = 0;
     
     [[self needleColor] set];
     [passingPath stroke];
+    
+    CGFloat fontSize = self.bounds.size.width/18;
+    UIFont* font = [UIFont fontWithName:@"Arial" size:fontSize];
+    UIColor* textColor = [self needleColor];
+    
+    NSLog(@"%ld", (long)[self passingLevel]);
+    NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
+    NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self passingLevel]] attributes:stringAttrs];
+    
+    CGPoint levelStrPoint = CGPointMake(passingPath.currentPoint.x - levelStr.size.width, passingPath.currentPoint.y - levelStr.size.height);
+    [levelStr drawAtPoint:levelStrPoint];
 }
 
 - (void) drawNeedle
@@ -390,6 +403,7 @@ static const CGFloat CUTOFF = 0;
 
 - (void) setCurrentLevel:(NSInteger)currentLevel
 {
+    NSLog(@"Current: %ld", (long)currentLevel);
     if (currentLevel >= self.minlevel && currentLevel <= self.maxlevel) {
         
         self.oldLevel = currentLevel;
@@ -407,9 +421,38 @@ static const CGFloat CUTOFF = 0;
 }
 
 #pragma mark Passing Radian
+- (NSInteger)passingLevel
+{
+    NSInteger level = -1;
+    
+    CGFloat levelSection = (M_PI - (CUTOFF * 2)) / self.scale;
+    CGFloat currentSection = -M_PI_2 + CUTOFF;
+    
+    for (int i=1; i<=self.scale;i++) {
+        //        NSLog(@"[%fl, %fl] = %fl", currentSection, (currentSection + levelSection), self.currentRadian);
+        if (self.passingRadian >= currentSection && self.passingRadian < (currentSection + levelSection)) {
+            level = i;
+            break;
+        }
+        currentSection += levelSection;
+    }
+    
+    if (self.passingRadian >= (M_PI_2 - CUTOFF)) {
+        level = self.scale + 1;
+    }
+    
+    level = level + self.minlevel - 1;
+    
+    self.passingLevel = level;
+    return level;
+}
+
 - (void)setPassingLevel:(NSInteger)passingLevel
 {
+    NSLog(@"%ld", (long)passingLevel);
     if (passingLevel >= self.minlevel && passingLevel <= self.maxlevel) {
+        self.oldPassing = passingLevel;
+        
         CGFloat range = M_PI - (CUTOFF * 2);
         if (passingLevel != self.scale/2) {
             self.passingRadian = (passingLevel * range)/self.scale - (range/2);
@@ -504,10 +547,6 @@ static const CGFloat CUTOFF = 0;
 
 - (NSUInteger)scale {
     return self.maxlevel - self.minlevel;
-}
-
-- (BOOL)hideLevel {
-    return true;
 }
 
 @end
