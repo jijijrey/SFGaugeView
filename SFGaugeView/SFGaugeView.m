@@ -13,6 +13,7 @@
 @property(nonatomic) CGFloat needleRadius;
 @property(nonatomic) CGFloat bgRadius;
 @property(nonatomic) CGFloat currentRadian;
+@property(nonatomic) CGFloat passingRadian;
 @property(nonatomic) NSInteger oldLevel;
 @property(nonatomic, readonly) NSUInteger scale;
 @end
@@ -48,6 +49,7 @@ static const CGFloat CUTOFF = 0;
     self.contentMode = UIViewContentModeRedraw;
     
     self.currentRadian = 0;
+    self.passingLevel = 0;
     [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)]];
 }
 
@@ -61,10 +63,10 @@ static const CGFloat CUTOFF = 0;
 - (void)drawRect:(CGRect)rect
 {
     [self drawBg];
-    [self drawNeedle];
     [self drawLabels];
     [self drawImageLabels];
     [self drawLevels];
+    [self drawNeedle];
 }
 
 - (void) drawImageLabels
@@ -105,9 +107,18 @@ static const CGFloat CUTOFF = 0;
         stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
         NSAttributedString* minlevelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self minlevel]] attributes:stringAttrs];
         
-        CGPoint levelStrPoint = CGPointMake([self centerX] - self.bgRadius + minlevelStr.size.width, [self center].y + 5);
-        [minlevelStr drawAtPoint:levelStrPoint];
+        CGPoint minlevelStrPoint = CGPointMake([self centerX] - self.bgRadius + minlevelStr.size.width, [self center].y + 5);
+        [minlevelStr drawAtPoint:minlevelStrPoint];
+        
+        NSAttributedString* maxlevelstr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self maxlevel]] attributes:stringAttrs];
+        CGPoint maxlevelStrPoint = CGPointMake([self centerX] + self.bgRadius - maxlevelstr.size.width, [self center].y + 5);
+        [maxlevelstr drawAtPoint:maxlevelStrPoint];
     }
+}
+
+- (void) drawPassingLabel
+{
+    
 }
 
 - (void) drawLabels
@@ -154,6 +165,8 @@ static const CGFloat CUTOFF = 0;
     [[self progressColor] set];
     [bgPath2 fill];
     
+    [self drawPassing];
+    
     UIBezierPath *bgPathInner = [UIBezierPath bezierPath];
     [bgPathInner moveToPoint:[self center]];
     
@@ -199,6 +212,29 @@ static const CGFloat CUTOFF = 0;
     
     //return the color-burned image
     return coloredImg;
+}
+
+- (void)drawPassing
+{
+    CGFloat distance = [self bgRadius];
+    
+    UIBezierPath *passingPath = [UIBezierPath bezierPath];
+    [passingPath moveToPoint:[self center]];
+    
+    CGPoint passingPoint = CGPointMake([self center].x, [self center].y - distance);
+    [passingPath addLineToPoint:passingPoint];
+    
+    CGAffineTransform translate = CGAffineTransformMakeTranslation(-1 * (self.bounds.origin.x + [self center].x), -1 * (self.bounds.origin.y + [self center].y));
+    [passingPath applyTransform:translate];
+    
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(self.passingRadian);
+    [passingPath applyTransform:rotate];
+    
+    translate = CGAffineTransformMakeTranslation((self.bounds.origin.x + [self center].x), (self.bounds.origin.y + [self center].y));
+    [passingPath applyTransform:translate];
+    
+    [[self needleColor] set];
+    [passingPath stroke];
 }
 
 - (void) drawNeedle
@@ -368,6 +404,21 @@ static const CGFloat CUTOFF = 0;
         //        NSLog(@"Current Radian is %f", self.currentRadian);
         [self setNeedsDisplay];
     }
+}
+
+#pragma mark Passing Radian
+- (void)setPassingLevel:(NSInteger)passingLevel
+{
+    if (passingLevel >= self.minlevel && passingLevel <= self.maxlevel) {
+        CGFloat range = M_PI - (CUTOFF * 2);
+        if (passingLevel != self.scale/2) {
+            self.passingRadian = (passingLevel * range)/self.scale - (range/2);
+        } else {
+            self.passingRadian = 0.f;
+        }
+    }
+    
+    [self setNeedsDisplay];
 }
 
 #pragma mark custom getter/setter

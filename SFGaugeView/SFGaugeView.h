@@ -30,6 +30,7 @@
 @property (nonatomic) BOOL autoAdjustImageColors;
 
 @property (nonatomic) NSInteger currentLevel;
+@property (nonatomic) NSInteger passingLevel;
 
 @property (nonatomic, weak) id<SFGaugeViewDelegate> delegate;
 
