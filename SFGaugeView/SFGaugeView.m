@@ -246,7 +246,7 @@ static const CGFloat CUTOFF = 0;
     NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
     NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self passingLevel]] attributes:stringAttrs];
     
-    CGPoint levelStrPoint = CGPointMake(passingPath.currentPoint.x - levelStr.size.width, passingPath.currentPoint.y - levelStr.size.height);
+    CGPoint levelStrPoint = CGPointMake(passingPath.currentPoint.x - levelStr.size.width/2, passingPath.currentPoint.y - levelStr.size.height);
     [levelStr drawAtPoint:levelStrPoint];
 }
 

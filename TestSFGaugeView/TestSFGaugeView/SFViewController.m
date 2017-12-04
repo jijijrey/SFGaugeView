@@ -36,10 +36,10 @@
 //    view.frame = self.view.frame;
 //    [self.view addSubview:view];
     
-    self.topTachometer.maxlevel = 10;
+    self.topTachometer.maxlevel = 300;
     self.topTachometer.minlevel = 0;
-    self.topTachometer.currentLevel = 8;
-    self.topTachometer.passingLevel = 3;
+    self.topTachometer.currentLevel = 217;
+    self.topTachometer.passingLevel = 158;
     self.topTachometer.hideLevel = YES;
     
 }
