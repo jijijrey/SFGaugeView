@@ -242,7 +242,7 @@ static const CGFloat CUTOFF = 0;
     UIFont* font = [UIFont fontWithName:@"Arial" size:fontSize];
     UIColor* textColor = [self needleColor];
     
-    NSLog(@"%ld", (long)[self passingLevel]);
+    NSLog(@"passing level: %ld", (long)[self passingLevel]);
     NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
     NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)[self passingLevel]] attributes:stringAttrs];
     
@@ -441,9 +441,9 @@ static const CGFloat CUTOFF = 0;
         level = self.scale + 1;
     }
     
-    level = level + self.minlevel - 1;
+    // level = level + self.minlevel - 1;
     
-    self.passingLevel = level;
+    // self.passingLevel = level;
     return level;
 }
 
