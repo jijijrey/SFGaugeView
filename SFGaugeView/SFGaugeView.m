@@ -242,9 +242,12 @@ static const CGFloat CUTOFF = 0;
     UIFont* font = [UIFont fontWithName:@"Arial" size:fontSize];
     UIColor* textColor = [self needleColor];
     
-    NSLog(@"passing level: %ld", (long)[self passingLevel]);
+    NSLog(@"passing level int: %ld", (long)[self passingLevel]);
+    
+    NSString *passing = @([self passingLevel]).stringValue;
+    NSLog(@"passing level str: %@", passing);
     NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
-    NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)[self passingLevel]] attributes:stringAttrs];
+    NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", passing] attributes:stringAttrs];
     
     CGPoint levelStrPoint = CGPointMake(passingPath.currentPoint.x - levelStr.size.width/2, passingPath.currentPoint.y - levelStr.size.height);
     [levelStr drawAtPoint:levelStrPoint];
