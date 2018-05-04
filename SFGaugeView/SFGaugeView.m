@@ -247,7 +247,7 @@ static const CGFloat CUTOFF = 0;
     NSString *passing = @([self passingLevel]).stringValue;
     NSLog(@"passing level str: %@", passing);
     NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
-    NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", passing] attributes:stringAttrs];
+    NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[self passingScore] attributes:stringAttrs];
     
     CGPoint levelStrPoint = CGPointMake(passingPath.currentPoint.x - levelStr.size.width/2, passingPath.currentPoint.y - levelStr.size.height);
     [levelStr drawAtPoint:levelStrPoint];
