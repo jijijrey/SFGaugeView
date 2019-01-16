@@ -246,6 +246,9 @@ static const CGFloat CUTOFF = 0;
     
     NSString *passing = @([self passingLevel]).stringValue;
     NSLog(@"passing level str: %@", passing);
+    if ([self passingScore] == nil) {
+        self.passingScore = @"0";
+    }
     NSDictionary* stringAttrs = @{ NSFontAttributeName : font, NSForegroundColorAttributeName : textColor };
     NSAttributedString* levelStr = [[NSAttributedString alloc] initWithString:[self passingScore] attributes:stringAttrs];
     
